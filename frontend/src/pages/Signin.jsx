@@ -1,12 +1,13 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react"
 import { useState } from "react"
 import { Link ,useNavigate} from "react-router-dom"
+import {signInSuccess,signInStart,signInFailure} from '../redux/user/userSlice'
+import {useDispatch,useSelector} from 'react-redux'
 
 const SignIn = () => {
-
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const {error,loading}=useSelector((state)=>state.user);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -16,11 +17,10 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      return setErrorMessage('Please fill out all fields.');
+     return dispatch(signInFailure('Please fill out all fields.'))
     }
     try {
-      setLoading(true);
-      setErrorMessage(null)
+      dispatch(signInStart());
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
@@ -30,16 +30,14 @@ const SignIn = () => {
       });
       const data = await res.json();
       if (data.success === false) {
-        setLoading(false);
-        return setErrorMessage(data.message);
+        dispatch(signInFailure(data.message))
       }
-      setLoading(false);
       if(res.ok){
+        dispatch(signInSuccess(data));
         navigate('/');
       }
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   }
 
@@ -59,11 +57,11 @@ const SignIn = () => {
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div>
               <Label value="Your Email" />
-              <TextInput type="email" placeholder="Email" id="email" onChange={handleChange} />
+              <TextInput type="email" placeholder="Email" id="email" onChange={handleChange}  required/>
             </div>
             <div>
               <Label value="Your Password" />
-              <TextInput type="password" placeholder="Password" id="password" onChange={handleChange} />
+              <TextInput type="password" placeholder="Password" id="password" onChange={handleChange} required/>
             </div>
             <Button disabled={loading} gradientDuoTone={'purpleToBlue'} type="submit">{loading ? <><Spinner size={'sm'} /> <span className="pl-3">Loading...</span></> : 'Sign In'}</Button>
           </form>
@@ -72,9 +70,9 @@ const SignIn = () => {
             <Link to={'/sign-up'} className="text-blue-500">Sign Up</Link>
           </div>
           {
-            errorMessage && (
+            error && (
               <Alert className="mt-5" color={'failure'}>
-                {errorMessage}
+                {error}
               </Alert>
             )
           }
