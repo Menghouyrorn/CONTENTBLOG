@@ -72,9 +72,7 @@ const google = async (req, res, next) => {
         Math.random().toString(36).split(-8);
       const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
       const newUser = new User({
-        username:
-          username.toLowerCase().split(" ").join("") +
-          Math.random().toString(9).split(-4),
+        username: username,
         email: email,
         password: hashedPassword,
         profile: googlePhotoUrl,
