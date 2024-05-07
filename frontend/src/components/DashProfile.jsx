@@ -47,6 +47,8 @@ const DashProfile = () => {
                 setImageFileUploadError('cloud not upload image (file must be less then 2MB)');
                 console.log(error);
                 setImageFileUploadProgress(null)
+                setImageFile(null);
+                setImageUrl(null);
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
