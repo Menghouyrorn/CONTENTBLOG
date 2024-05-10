@@ -16,7 +16,7 @@ const updateUser = async (req, res, next) => {
 
     req.body.password = bcryptjs.hashSync(req.body.password, 10);
   }
-  
+
   try {
     const updateUser = await User.findByIdAndUpdate(
       req.params.id,
@@ -37,4 +37,17 @@ const updateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { test, updateUser };
+const deleteUser = async(req,res,next)=>{
+  if(req.user.id !== req.params.id) return next(errorHandler(403,'You are not allowed delete this user account'));
+
+  try {
+    await User.findOneAndDelete(req.params.id);
+    res.status(200).json('User has been deleted');
+  } catch (error) {
+    next(error);
+  }
+
+}
+
+
+module.exports = { test, updateUser,deleteUser };
