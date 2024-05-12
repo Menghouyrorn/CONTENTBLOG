@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 const DashPosts = () => {
     const { currentUser } = useSelector((state) => state.user);
     const [userposts, setUserPosts] = useState([]);
+    const [showMore,setShowMore]=useState(false);
 
-    console.log(userposts);
+
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -15,7 +17,11 @@ const DashPosts = () => {
                 const data = await res.json();
                 if (res.ok) {
                     setUserPosts(data.posts);
-
+                    if(data.posts.length <9){
+                        setShowMore(false);
+                    }else{
+                        setShowMore(true);
+                    }
                 }
             } catch (error) {
                 console.log(error);
@@ -26,14 +32,30 @@ const DashPosts = () => {
         }
     }, [currentUser._id]);
 
+    const handleShowMore=async()=>{
+        const startIndex = userposts.length;
+        try {
+            const res = await fetch(`/api/post/getPosts?userId=${currentUser._id}&startIndex=${startIndex}`);
+            const data = await res.json();
+            if(res.ok){
+                setUserPosts((prve)=>[...prve,...data.posts]);
+                if(data.posts.length < 9){
+                    setShowMore(false);
+                }
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
 
     return (
-        <div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+        <div className="w-full table-auto md:overflow-x-scroll lg:overflow-hidden overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
             {
                 currentUser.isAdmin && userposts.length > 0 ? (
                     <>
-                        <Table hoverable className="shadow-md">
+                        <Table hoverable className="shadow-md w-full">
                             <Table.Head>
                                 <Table.HeadCell>Date Updated</Table.HeadCell>
                                 <Table.HeadCell>Image</Table.HeadCell>
@@ -71,6 +93,11 @@ const DashPosts = () => {
                                 ))
                             }
                         </Table>
+                        {
+                            showMore && (
+                                <button onClick={handleShowMore} className="w-full text-teal-500 self-center text-sm py-7">Show more</button>
+                            )
+                        }
                     </>
                 ) : (
                     <p>No posts</p>
