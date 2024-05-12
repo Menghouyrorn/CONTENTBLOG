@@ -1,28 +1,34 @@
-const mongoose = require('mongoose');
-const { type } = require('os');
+const mongoose = require("mongoose");
+const { type } = require("os");
 
-const userSchema = new mongoose.Schema({
-    username:{
-        type:String,
-        require:true,
-        unique:true
+const userSchema = new mongoose.Schema(
+  {
+    username: {
+      type: String,
+      require: true,
+      unique: true,
     },
-    email:{
-        type:String,
-        require:true,
-        unique:true,
+    email: {
+      type: String,
+      require: true,
+      unique: true,
     },
-    password:{
-        type:String,
-        require:true,
+    password: {
+      type: String,
+      require: true,
     },
-    profile:{
-        type:String,
-        default:'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
-    }
-},{timestamps:true});
+    profile: {
+      type: String,
+      default: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-const User = mongoose.model('User',userSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports=User;
-
+module.exports = User;

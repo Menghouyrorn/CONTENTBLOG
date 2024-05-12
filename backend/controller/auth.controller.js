@@ -42,7 +42,7 @@ const signin = async (req, res, next) => {
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) return next(errorHandler(400, "Wrong password"));
 
-    const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ id: validUser._id,isAdmin:validUser.isAdmin }, process.env.JWT_SECRET);
     const { password: hashPassword, ...rest } = validUser._doc;
     res
       .cookie("access_token", token, { httpOnly: true })
@@ -58,7 +58,7 @@ const google = async (req, res, next) => {
   try {
     const user = await User.findOne({ email });
     if (user) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id,isAdmin:user.isAdmin }, process.env.JWT_SECRET);
       const { password, ...rest } = user._doc;
       res
         .status(200)
@@ -80,7 +80,7 @@ const google = async (req, res, next) => {
 
       await newUser.save();
 
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: newUser._id,isAdmin:newUser.isAdmin }, process.env.JWT_SECRET);
       const { password, ...rest } = newUser._doc;
 
       res
