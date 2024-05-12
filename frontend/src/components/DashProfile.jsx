@@ -13,7 +13,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 
 const DashProfile = () => {
-    const { currentUser, error, loading } = useSelector((state) => state.user);
+    const { currentUser, error } = useSelector((state) => state.user);
     const [imageFile, setImageFile] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const refImageFile = useRef();
@@ -76,7 +76,6 @@ const DashProfile = () => {
         )
     }
 
-    console.log(formData);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -188,7 +187,7 @@ const DashProfile = () => {
                 <TextInput onChange={handleChange} type="text" id="username" placeholder="Username" defaultValue={currentUser.username} />
                 <TextInput onChange={handleChange} type="email" id="email" placeholder="Email" defaultValue={currentUser.email} />
                 <TextInput onChange={handleChange} type="password" id="password" placeholder="Password" />
-                <Button type="submit" disabled={loading || imageFileUploading} gradientDuoTone={'purpleToBlue'} outline>{loading ? 'Loading...':'Update'}</Button>
+                <Button type="submit" gradientDuoTone={'purpleToBlue'} outline>Update</Button>
                 {
                     currentUser.isAdmin && (
                         <Link to={'/create-post'}>
