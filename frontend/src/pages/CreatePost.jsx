@@ -1,8 +1,57 @@
-import { Button, FileInput, Select, TextInput } from "flowbite-react"
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react"
+import { useState } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { app } from "../firebase";
+import { CircularProgressbar } from 'react-circular-progressbar'
+import 'react-circular-progressbar/dist/styles.css';
+
 
 const CreatePost = () => {
+    const [file, setFile] = useState(null);
+    const [imageUploadProgress, setImageUploadProgress] = useState(null);
+    const [imageUploadError, setImageUploadError] = useState(null);
+    const [formData, setFormData] = useState({});
+
+    const handleUploadImage = async () => {
+        try {
+            if (!file) {
+                setImageUploadError('Please select an image');
+                return;
+            }
+            setImageUploadError(null);
+            const storage = getStorage(app);
+            const fileName = new Date().getTime() + "-" + file.name;
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setImageUploadProgress(progress.toFixed(0));
+                },
+                (error) => {
+                    setImageUploadError('Image upload failed');
+                    setImageUploadProgress(null);
+                    console.log(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        setImageUploadProgress(null);
+                        setImageUploadError(null);
+                        setFormData({ ...formData, image: downloadURL });
+                    });
+                }
+            );
+
+        } catch (error) {
+            setImageUploadError('Image upload error');
+            setImageUploadProgress(null);
+            console.log(error);
+        }
+    }
+
     return (
         <div className="p-3 max-w-3xl mx-auto min-h-screen">
             <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
@@ -19,10 +68,26 @@ const CreatePost = () => {
                     </Select>
                 </div>
                 <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-                    <FileInput type="file" accept="image/*" />
-                    <Button type="button" gradientDuoTone={'purpleToBlue'} size={'sm'} outline>Upload Image</Button>
+                    <FileInput type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+                    <Button
+                        type="button"
+                        onClick={handleUploadImage}
+                        gradientDuoTone={'purpleToBlue'}
+                        size={'sm'}
+                        disabled={imageUploadProgress}
+                        outline>
+                        {imageUploadProgress ? <div className="w-16 h-16">
+                            <CircularProgressbar value={imageUploadProgress} text={`${imageUploadProgress || 0} %`} />
+                        </div> : (
+                            'Upload Image'
+                        )}
+                    </Button>
                 </div>
-                <ReactQuill theme="snow" required id="content" placeholder="Write something..." className="h-72 mb-12"/>
+                {imageUploadError && <Alert color={'failure'}>{imageUploadError}</Alert>}
+                {formData.image && (
+                    <img src={formData.image} alt="image Upload" className="w-full h-72 object-cover" />
+                )}
+                <ReactQuill theme="snow" required id="content" placeholder="Write something..." className="h-72 mb-12" />
                 <Button type="submit" gradientDuoTone={'purpleToPink'} outline>Publish</Button>
             </form>
         </div>
