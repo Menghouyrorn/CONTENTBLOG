@@ -21,25 +21,25 @@ const UpdatePost = () => {
     const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
-        try {
-            const fetchPost = async () => {
-                const res = await fetch(`/api/post/getPosts?postId=${postId}`);
+
+        const fetchPost = async () => {
+            try {
+                const res = await fetch(`/api/post/getposts?postId=${postId}`);
                 const data = await res.json();
                 if (!res.ok) {
                     setPostError(data.message);
                     return;
                 }
                 if (res.ok) {
-                    setPostError(null);
                     setFormData(data.posts[0]);
+                    setPostError(null);
                 }
+            } catch (error) {
+                console.log(error.message);
             }
-
-            fetchPost();
-
-        } catch (error) {
-            console.log(error.message);
         }
+        fetchPost();
+        console.log(formData)
     }, [postId])
 
 
@@ -80,11 +80,10 @@ const UpdatePost = () => {
             console.log(error);
         }
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`/api/post/updatepost/${formData._id}/${currentUser._id}`, {
+            const res = await fetch(`/api/post/updatepost/${postId}/${currentUser._id}`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json',
