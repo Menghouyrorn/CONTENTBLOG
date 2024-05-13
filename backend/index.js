@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const userRoute = require("./routes/user.route");
 const authRoute = require("./routes/auth.route");
 const postRoute = require('./routes/post.route');
+const commentRoute = require('./routes/comment.route');
 const cookieParser = require('cookie-parser')
-
 
 
 const dotenv = require("dotenv");
@@ -22,6 +22,7 @@ app.use(cookieParser());
 app.use("/api/user", userRoute);
 app.use("/api/auth", authRoute);
 app.use('/api/post',postRoute);
+app.use('/api/comment',commentRoute);
 
 
 app.listen(8000, () => {
