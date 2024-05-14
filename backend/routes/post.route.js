@@ -14,4 +14,6 @@ router.get("/getposts", getPosts);
 router.delete("/deletepost/:postId/:userId", verifyToken, deletepost);
 router.put("/updatepost/:postId/:userId", verifyToken, updatepost);
 
+
+
 module.exports = router;
