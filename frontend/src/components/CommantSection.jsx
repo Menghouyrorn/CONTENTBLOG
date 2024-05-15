@@ -114,7 +114,7 @@ const CommantSection = ({ postId }) => {
                 setComments(
                     comments.filter((comment) => comment._id !== commentId)
                 );
-                
+                console.log(data);
             }
         } catch (error) {
             console.log(error);

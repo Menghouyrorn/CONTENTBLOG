@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import { useEffect, useState } from "react"
 import moment from 'moment'
@@ -107,7 +108,7 @@ const Comment = ({ comment, onLike,onEdit,onDelete }) => {
                                     }
                                 </p>
                                 {
-                                    currentUser && (currentUser._id === comment.userId || currentUser.isAdmin) && (
+                                    currentUser && (currentUser._id === comment.userId && currentUser.isAdmin) && (
                                         <>
                                             <button
                                             type="button"
