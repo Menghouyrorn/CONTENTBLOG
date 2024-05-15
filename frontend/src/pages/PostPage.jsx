@@ -12,7 +12,7 @@ const PostPage = () => {
     const [error, setError] = useState(false);
     const [post, setPost] = useState(null);
     const [recentPosts,setRecentPosts]=useState(null);
-
+    console.log(error);
 
 
     useEffect(() => {
