@@ -5,7 +5,7 @@ const authRoute = require("./routes/auth.route");
 const postRoute = require('./routes/post.route');
 const commentRoute = require('./routes/comment.route');
 const cookieParser = require('cookie-parser')
-
+const path = require('path');
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -13,6 +13,8 @@ dotenv.config();
 mongoose.connect(process.env.MONGO).then(() => {
   console.log("Mongodb connected");
 });
+
+const __dirname = path.resolve();
 
 const app = express();
 app.use(express.json());
@@ -24,6 +26,10 @@ app.use("/api/auth", authRoute);
 app.use('/api/post',postRoute);
 app.use('/api/comment',commentRoute);
 
+app.use(express.static(path.join(__dirname,'/frontend/dist')))
+app.get('*',(req,res)=>{
+  res.sendFile(path.json(__dirname,'frontend','dist','index.html'))
+})
 
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
