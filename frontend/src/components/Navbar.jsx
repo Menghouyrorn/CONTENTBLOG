@@ -1,16 +1,28 @@
 import { Avatar, Button, Dropdown, Navbar, TextInput } from 'flowbite-react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation,useNavigate } from 'react-router-dom'
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaMoon, FaSun } from 'react-icons/fa'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleTheme } from '../redux/theme/themeSlice'
 import {signoutSuccess} from '../redux/user/userSlice'
+import { useEffect, useState } from 'react';
 
 const Header = () => {
     const { currentUser } = useSelector((state) => state.user);
     const dipatch = useDispatch();
+    const navigate = useNavigate();
     const pathname = useLocation().pathname;
     const { theme } = useSelector((state) => state.theme);
+    const [searchTerm,setSearchTerm]=useState('');
+    const location =useLocation();
+
+    useEffect(()=>{
+        const urlPramse = new URLSearchParams(location.search);
+        const searchTermFromUrl = urlPramse.get('searchTerm');
+        if(searchTermFromUrl){
+            setSearchTerm(searchTermFromUrl)
+        }
+    },[location.search]);
 
     const handleSignOut = async ()=>{
         try {
@@ -29,14 +41,29 @@ const Header = () => {
         }
     }
 
+    const handleSearch = (e)=>{
+        e.preventDefault();
+        const urlParams = new URLSearchParams(location.search);
+        urlParams.set('searchTerm',searchTerm);
+        const searchQuery = urlParams.toString();
+        navigate(`/search?${searchQuery}`);
+    }
+
     return (
         <Navbar className='border-b-2'>
             <Link to={'/'} className='self-center text-sm sm:text-xl font-semibold dark:text-white whitespace-nowrap'>
                 <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 rounded-lg text-white to-pink-500'>MENGHOUY</span>
                 CONTENT
             </Link>
-            <form>
-                <TextInput type='text' placeholder='Search...' className='hidden lg:inline' rightIcon={AiOutlineSearch} />
+            <form onSubmit={handleSearch}>
+                <TextInput 
+                type='text' 
+                placeholder='Search...' 
+                className='hidden lg:inline' 
+                rightIcon={AiOutlineSearch} 
+                value={searchTerm}
+                    onChange={(e)=>setSearchTerm(e.target.value)}
+                />
             </form>
             <Button className='w-12 h-10 lg:hidden' color={'gray'} pill>
                 <AiOutlineSearch size={20} />

@@ -126,7 +126,7 @@ const DashboardComp = () => {
                     <div className="flex justify-between p-3 text-sm font-semibold ">
                         <h1 className="text-center p-2">Recent Users</h1>
                         <Button outline gradientDuoTone={'purpleToPink'}>
-                            <Link to={'/dashborad?tab=users'}>See all</Link>
+                            <Link to={'/dashboard?tab=users'}>See all</Link>
                         </Button>
                     </div>
                     <Table hoverable>
@@ -156,7 +156,7 @@ const DashboardComp = () => {
                     <div className="flex justify-between p-3 text-sm font-semibold ">
                         <h1 className="text-center p-2">Recent Comments</h1>
                         <Button outline gradientDuoTone={'purpleToPink'}>
-                            <Link to={'/dashborad?tab=comments'}>See all</Link>
+                            <Link to={'/dashboard?tab=comments'}>See all</Link>
                         </Button>
                     </div>
                     <Table hoverable>
@@ -182,7 +182,7 @@ const DashboardComp = () => {
                     <div className="flex justify-between p-3 text-sm font-semibold ">
                         <h1 className="text-center p-2">Recent Posts</h1>
                         <Button outline gradientDuoTone={'purpleToPink'}>
-                            <Link to={'/dashborad?tab=posts'}>See all</Link>
+                            <Link to={'/dashboard?tab=posts'}>See all</Link>
                         </Button>
                     </div>
                     <Table hoverable>
