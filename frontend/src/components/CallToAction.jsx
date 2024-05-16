@@ -8,7 +8,7 @@ function CallToAction() {
         <h2 className="text-2xl ">Want to learn more about React js?</h2>
         <p className="text-gray-500 my-2">Checkout these resourse with React js project</p>
         <Button gradientDuoTone={'purpleToPink'} className="rounded-tl-xl rounded-bl-none">
-            <a href="https://github.com/" target="_blank" rel="onopener noreferrer">Learn More</a>
+            <a href="https://pdf-convert-to-editable-text-that-support-khmer-language.vercel.app/" target="_blank" rel="onopener noreferrer">Learn More</a>
         </Button>
       </div>
       <div className="p-7 flex-1">
