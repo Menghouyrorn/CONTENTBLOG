@@ -88,7 +88,7 @@ const DashComments = () => {
                                 comments.map((user) => (
                                     <Table.Body key={user._id} className="divide-y">
                                         <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                                            <Table.Cell>{new Date(user.UpdatedAt).toLocaleDateString()}</Table.Cell>
+                                            <Table.Cell>{new Date(user.updatedAt).toLocaleDateString()}</Table.Cell>
                                             <Table.Cell>
                                                 {user.content}
                                             </Table.Cell>
