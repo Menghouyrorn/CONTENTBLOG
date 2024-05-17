@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGO).then(() => {
   console.log("Mongodb connected");
 });
 
-const __dirname = path.resolve();
+const dirname = path.resolve();
 
 const app = express();
 app.use(express.json());
@@ -26,9 +26,9 @@ app.use("/api/auth", authRoute);
 app.use('/api/post',postRoute);
 app.use('/api/comment',commentRoute);
 
-app.use(express.static(path.join(__dirname,'/frontend/dist')))
+app.use(express.static(path.join(dirname,'/frontend/dist')))
 app.get('*',(req,res)=>{
-  res.sendFile(path.json(__dirname,'frontend','dist','index.html'))
+  res.sendFile(path.json(dirname,'frontend','dist','index.html'))
 })
 
 app.listen(8000, () => {
